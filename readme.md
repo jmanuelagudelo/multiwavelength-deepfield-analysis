@@ -50,7 +50,7 @@ Los archivos de `data/` son descargas locales y pueden regenerarse. Si una desca
 
 ## Requisitos y ejecución
 
-Se necesita Bash, Python 3 y `pip`. Las consultas requieren además `curl` y `wget`, que se instalan en el sistema operativo y no mediante `pip`. Las librerías de Python están enumeradas en `requirements.txt`.
+Se necesita Bash, Python 3 y pip. Las consultas requieren además `curl` y `wget`, que se instalan en el sistema operativo. Las librerías de Python están enumeradas en `requirements.txt`.
 
 ### Crear y usar un entorno virtual
 
@@ -63,23 +63,15 @@ python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
 ```
 
-Si `venv` no está instalado en Ubuntu/WSL, puedes instalar el componente del sistema con `sudo apt update && sudo apt install python3-venv`. Una vez activado el entorno, la terminal mostrará normalmente `(.venv)` al inicio del prompt. Ejecuta el programa desde esa misma terminal para que `main.sh` use las librerías instaladas en el entorno:
+Una vez activado el entorno, ejecuta el programa desde esa misma terminal para que `main.sh` use las librerías instaladas en el entorno:
 
 ```bash
 bash main.sh
 ```
 
-Al terminar, puedes salir del entorno virtual con:
+`main.sh` consulta SDSS y VizieR. Si una consulta falla, informa del problema y continúa con los datos de muestra disponibles. Después genera los diagramas de cada catálogo, pregunta si quieres abrir los diagramas estáticos y construye el catálogo y gráfico interactivos. El gráfico interactivo se guarda como `resultados/combined_catalogs_interactive.html` y se abre en el navegador predeterminado del mismo equipo.
 
-```bash
-deactivate
-```
-
-En una nueva terminal, activa el entorno existente antes de volver a ejecutar el proyecto: `source .venv/bin/activate`.
-
-`main.sh` consulta SDSS y VizieR. Si una consulta falla, informa del problema y continúa con los datos de muestra disponibles. Después genera los diagramas de cada catálogo, pregunta si quieres abrir los diagramas estáticos y construye el catálogo y gráfico interactivos. El gráfico interactivo se guarda como `resultados/combined_catalogs_interactive.html` y se abre en el navegador predeterminado del mismo equipo. El archivo incluye Plotly, así que no necesita descargar esa biblioteca desde Internet.
-
-También puedes abrir el resultado manualmente desde el administrador de archivos: entra en `resultados/` y abre `combined_catalogs_interactive.html` con tu navegador. En WSL, si el navegador no se abre automáticamente, accede a la carpeta del proyecto desde Windows y abre allí el HTML. Esta forma de abrirlo es para el equipo local; no crea una dirección compartida para teléfonos u otros equipos.
+También puedes abrir el resultado manualmente desde el administrador de archivos: entra en `resultados/` y abre `combined_catalogs_interactive.html` con tu navegador.
 
 ## Flujo de trabajo y motivo de cada paso
 
@@ -93,7 +85,7 @@ Se usa `LEFT JOIN` para conservar una fila Gaia aunque no haya una fuente AllWIS
 
 `scripts/vizier_data_analysis.py`:
 
-1. Lee la descarga o, cuando no contiene datos, carga la muestra.
+1. Lee la descarga, cuando no contiene datos, carga la muestra.
 2. Convierte coordenadas, paralaje, movimientos, magnitudes y `Teff` a columnas numéricas. Los valores no interpretables pasan a `NaN`; las filas se conservan.
 3. Marca como **estrella candidata de la Vía Láctea** cada fuente cuyo paralaje sea positivo. Es una selección preliminar, no una confirmación: no se está exigiendo que el paralaje sea significativo frente a su incertidumbre.
 4. Calcula el movimiento propio total, `sqrt(pmRA² + pmDE²)`, para análisis posteriores.
