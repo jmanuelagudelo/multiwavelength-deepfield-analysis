@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import webbrowser
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
@@ -405,6 +406,7 @@ def main():
     )
 
     fig.write_html(OUTPUT_HTML, include_plotlyjs=True, full_html=True)
+    webbrowser.open(OUTPUT_HTML.resolve().as_uri())
     print(f"Gráfica interactiva guardada en: {OUTPUT_HTML}")
     fig.show()
 
