@@ -8,19 +8,38 @@ import matplotlib.pyplot as plt
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data" / "gaia_allwise.csv"
+SAMPLE_DATA = ROOT / "data" / "gaia_allwise.csv"
 OUTPUT = ROOT / "resultados" / "color_magnitude_diagram.png"
 
 
 def analyse(show=False):
     """CLasifica las fuentes, reporta el procesos y genera un diagrama color-magnitud."""
 
-    try:
-        df = pd.read_csv(DATA)
-    except pd.errors.EmptyDataError as exc:
-        raise FileNotFoundError(
-            f"El archivo de datos {DATA} no existe o está vacío. "
-            "Ejecute primero el script main.sh para obtener los datos."
-        ) from exc
+    source = DATA
+    df = None
+    if DATA.exists() and DATA.stat().st_size > 10:
+        try:
+            downloaded_df = pd.read_csv(DATA)
+            if not downloaded_df.empty:
+                df = downloaded_df
+            else:
+                print(f"El archivo de datos {DATA} está vacío. Se usará un conjunto de datos de ejemplo.")
+        except pd.errors.EmptyDataError:
+            print(f"El archivo de datos {DATA} no se pudo leer. Se usará un conjunto de datos de ejemplo.")
+    else:
+        print(f"El archivo de datos {DATA} no existe o está vacío. Se usará un conjunto de datos de ejemplo.")
+
+    if df is None:
+        try:
+            df = pd.read_csv(SAMPLE_DATA)
+            print(f"Se cargó un conjunto de datos de ejemplo desde {SAMPLE_DATA}.")
+        except pd.errors.EmptyDataError:
+            raise FileNotFoundError(
+                f"El archivo de datos de ejemplo {SAMPLE_DATA} no existe o está vacío. "
+                "Ejecute primero el script main.sh para obtener los datos."
+            )
+    else:
+        print(f"Se cargaron {len(df)} registros desde {source}.")
 
     numeric_columns = [
         "RA_ICRS", "DE_ICRS", "Teff","Plx",

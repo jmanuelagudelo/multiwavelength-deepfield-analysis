@@ -24,5 +24,4 @@ curl --fail --get \
     --data-urlencode "format=csv" \
     --data-urlencode "cmd=$SQL" \
     "$URL" \
-    -o data/sdss_field.csv \
-    -w "URL generada: %{url_effective}\n"
+    -o data/sdss_field.csv

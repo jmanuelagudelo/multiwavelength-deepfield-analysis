@@ -39,9 +39,7 @@ URL_ADQL=$(echo $ADQL | sed 's/ /+/g')
 # Endpoint TAP de VizieR
 TAP_URL="https://tapvizier.cds.unistra.fr/TAPVizieR/tap/sync?request=doQuery&lang=ADQL&format=csv&query="
 
-echo "2. Descargando resultados..."
-
-wget -q -O ../data/gaia_allwise.csv "$TAP_URL$URL_ADQL"
+wget -O ../data/gaia_allwise.csv "$TAP_URL$URL_ADQL"
 
 #####
 
