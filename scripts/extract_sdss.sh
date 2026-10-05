@@ -1,3 +1,7 @@
+set -e
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "$ROOT_DIR"
+
 SQL="
 SELECT
     s.ra,
@@ -16,10 +20,9 @@ WHERE
 "
 
 URL="https://skyserver.sdss.org/dr18/SkyServerWS/SearchTools/SqlSearch"
-
 curl --fail --get \
     --data-urlencode "format=csv" \
     --data-urlencode "cmd=$SQL" \
     "$URL" \
-    -o ../data/sdss_field.csv \
+    -o data/sdss_field.csv \
     -w "URL generada: %{url_effective}\n"

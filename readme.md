@@ -1,18 +1,11 @@
 # Campo PRofundo Multi-Longitudinal de Onda
 
-## 1. Introduccion
+## 1. Objetivo
 
-ESte proyecto tiene como objetivo explorar las propiedades de las fuentes astronomicas presentes en un campo del cielo mediante la compbinacion de catalogos obtenidos en diferentes longitudes de onda. El analisis se centra en una region de coordenadas ecuatoriales
+Este proyecto estudia el campo ecuatorial centrado en $\mathrm{RA} = 135.5^\circ$, $\mathrm{Dec} = 0.5^\circ$, con radio de $0.5^\circ$. En donde se cruza astrometria y fotometria Gaia DR3 con AllWISE en un radio de 2 arco segundos y consulta los espectros fotometricos del SDSS para el mismo cirulo en 30 min de arco
 
-$$
-(\mathrm{RA},\mathrm{Dec})=(135.5^\circ,0.5^\circ)
-$$
+## Ejecucion
 
-con un radio de $(0.5^\circ)$
-
-
-Consultando la pagina 
-
-https://skyserver.sdss.org/dr16/en/help/docs/api.aspx
-
-se encuentra facilmente la funcion SkyServerWS/ImagingQuery/Cone
+python3 scripts/vizier_data_analysis.py --show cmd
+python3 scripts/vizier_data_analysis.py --show motion
+python3 scripts/vizier_data_analysis.py --show sky

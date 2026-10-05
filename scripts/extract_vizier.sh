@@ -1,14 +1,16 @@
 set -e
 
-echo "1. Consultando VizieR TAP mediante ADQL..."
+ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$ROOT_DIR"
 
-mkdir -p data
+echo "1. Consultando VizieR TAP mediante ADQL..."
 
 ADQL="
 SELECT
     g.DR3Name,
     g.RA_ICRS,
     g.DE_ICRS,
+    g.Teff,
     g.Plx,
     g.pmRA,
     g.pmDE,
