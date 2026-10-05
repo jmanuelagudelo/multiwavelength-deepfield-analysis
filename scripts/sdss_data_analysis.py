@@ -13,37 +13,26 @@ DATA = ROOT / "data" / "sdss_field.csv"
 SAMPLE_DATA = ROOT / "data" / "sdss_field.csv"
 OUTPUT = ROOT / "resultados" / "color_magnitude_diagram_sdss.png"
 
+
 def load_data():
     """
-    CArga datos del SDSS y si la consulta falla toma datos de muestra.
+    Carga datos del SDSS y, si la consulta falla, utiliza datos de muestra
     """
-
     df = None
-    source = DATA
 
-    if DATA.exists() and DATA.stat().st_size > 0:
+    if DATA.exists():
         try:
-            downloaded_df = pd.read_csv(DATA, comment="#")
-            if not downloaded_df.empty:
-                df = downloaded_df
-            else:
-                print(f"El archivo de datos {DATA} está vacío. Se usará un conjunto de datos de ejemplo.")
+            candidate = pd.read_csv(DATA, comment="#")
+            if not candidate.empty:
+                df = candidate
         except pd.errors.EmptyDataError:
-            print(f"El archivo de datos {DATA} no se pudo leer. Se usará un conjunto de datos de ejemplo.")
-    else:
-        print(f"El archivo de datos {DATA} no existe o está vacío. Se usará un conjunto de datos de ejemplo.")
+            pass
 
-    if df is None:
-        try:
-            df = pd.read_csv(SAMPLE_DATA, comment="#")
-            print(f"Se cargó un conjunto de datos de ejemplo desde {SAMPLE_DATA}.")
-        except pd.errors.EmptyDataError:
-            raise FileNotFoundError(
-                f"El archivo de datos de ejemplo {SAMPLE_DATA} no existe o está vacío. "
-                "Ejecute primero el script main.sh para obtener los datos."
-            )
+    if df is not None:
+        print(f"Se cargaron {len(df)} registros desde {DATA}.")
     else:
-        print(f"Se cargaron {len(df)} registros desde {source}.")
+        df = pd.read_csv(SAMPLE_DATA, comment="#")
+        print(f"El archivo {DATA} no existe o está vacío. Se cargaron {len(df)} registros de ejemplo desde {SAMPLE_DATA}.")
 
     required_columns = ["ra", "dec", "u", "g", "z"]
     missing_columns = [col for col in required_columns if col not in df.columns]
@@ -52,7 +41,6 @@ def load_data():
         raise ValueError(f"Las siguientes columnas requeridas están ausentes en los datos: {', '.join(missing_columns)}")
 
     return df
-
 
 def analyse(show=False):
     """

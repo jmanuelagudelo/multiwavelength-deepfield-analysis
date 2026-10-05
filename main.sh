@@ -22,4 +22,16 @@ if [[ $respuesta_sdss =~ ^[yY]$ ]]; then
     python3 scripts/sdss_data_analysis.py --show
 fi
 
-#python3 scripts/sdss_data_analysis.py
+python3 scripts/combined_catalogs.py
+
+URL="http://localhost:8000/combined_catalogs_interactive.html"
+echo "Gráfica local: $URL"
+
+if command -v explorer.exe >/dev/null 2>&1; then
+    explorer.exe "$URL"
+fi
+
+echo "Servidor activo. Presiona Ctrl+C para detenerlo."
+python3 -m http.server 8000 \
+    --bind 0.0.0.0 \
+    --directory "$ROOT_DIR/resultados"

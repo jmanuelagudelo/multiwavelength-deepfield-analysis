@@ -14,37 +14,25 @@ OUTPUT = ROOT / "resultados" / "color_magnitude_diagram.png"
 
 def analyse(show=False):
     """CLasifica las fuentes, reporta el procesos y genera un diagrama color-magnitud."""
-
     source = DATA
     df = None
-    if DATA.exists() and DATA.stat().st_size > 10:
-        try:
-            downloaded_df = pd.read_csv(DATA)
-            if not downloaded_df.empty:
-                df = downloaded_df
-            else:
-                print(f"El archivo de datos {DATA} está vacío. Se usará un conjunto de datos de ejemplo.")
-        except pd.errors.EmptyDataError:
-            print(f"El archivo de datos {DATA} no se pudo leer. Se usará un conjunto de datos de ejemplo.")
-    else:
-        print(f"El archivo de datos {DATA} no existe o está vacío. Se usará un conjunto de datos de ejemplo.")
 
-    if df is None:
+    if DATA.exists():
         try:
-            df = pd.read_csv(SAMPLE_DATA)
-            print(f"Se cargó un conjunto de datos de ejemplo desde {SAMPLE_DATA}.")
+            candidate = pd.read_csv(DATA)
+            if not candidate.empty:
+                df = candidate
         except pd.errors.EmptyDataError:
-            raise FileNotFoundError(
-                f"El archivo de datos de ejemplo {SAMPLE_DATA} no existe o está vacío. "
-                "Ejecute primero el script main.sh para obtener los datos."
-            )
-    else:
+            pass
+
+    if df is not None:
         print(f"Se cargaron {len(df)} registros desde {source}.")
+    else:
+        source = SAMPLE_DATA
+        df = pd.read_csv(source)
+        print(f"El archivo {DATA} no existe o está vacío. Se cargaron {len(df)} registros de ejemplo desde {source}.")
 
-    numeric_columns = [
-        "RA_ICRS", "DE_ICRS", "Teff","Plx",
-        "pmRA", "pmDE", "Gmag", "W1mag"
-    ]
+    numeric_columns = ["RA_ICRS", "DE_ICRS", "Teff","Plx","pmRA", "pmDE", "Gmag", "W1mag"]
 
     for column in numeric_columns:
         df[column] = pd.to_numeric(df[column], errors="coerce")
