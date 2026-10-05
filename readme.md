@@ -20,6 +20,7 @@ Estas imágenes presentan el contexto visual de la región observada; no son im�
 proyecto_mes2/
 ├── main.sh                         # Flujo principal, consultas, análisis y apertura del resultado
 ├── readme.md                       # Este documento
+├── requirements.txt                # Paquetes de Python requeridos
 ├── data/
 │   ├── gaia_allwise.csv             # Descarga Gaia–AllWISE de VizieR
 │   └── sdss_field.csv               # Descarga del campo SDSS
@@ -36,6 +37,8 @@ proyecto_mes2/
 └── resultados/
     ├── color_magnitude_diagram.png
     ├── color_magnitude_diagram_sdss.png
+    ├── proper_motion_diagram.png
+    ├── sky_map.png
     ├── gaia-sdss-posiciones-y-resultado-del-cru.png
     ├── combined_catalog.csv
     ├── combined_catalogs_interactive.html
@@ -47,11 +50,32 @@ Los archivos de `data/` son descargas locales y pueden regenerarse. Si una desca
 
 ## Requisitos y ejecución
 
-Se necesita Bash, Python 3 y los paquetes `pandas`, `numpy`, `matplotlib` y `plotly`; las consultas requieren `curl` y `wget`. Desde WSL o una terminal con Bash, ejecuta desde la raíz del proyecto:
+Se necesita Bash, Python 3 y `pip`. Las consultas requieren además `curl` y `wget`, que se instalan en el sistema operativo y no mediante `pip`. Las librerías de Python están enumeradas en `requirements.txt`.
+
+### Crear y usar un entorno virtual
+
+Desde la raíz del proyecto, en WSL o Linux, crea y activa un entorno virtual e instala las dependencias:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+```
+
+Si `venv` no está instalado en Ubuntu/WSL, puedes instalar el componente del sistema con `sudo apt update && sudo apt install python3-venv`. Una vez activado el entorno, la terminal mostrará normalmente `(.venv)` al inicio del prompt. Ejecuta el programa desde esa misma terminal para que `main.sh` use las librerías instaladas en el entorno:
 
 ```bash
 bash main.sh
 ```
+
+Al terminar, puedes salir del entorno virtual con:
+
+```bash
+deactivate
+```
+
+En una nueva terminal, activa el entorno existente antes de volver a ejecutar el proyecto: `source .venv/bin/activate`.
 
 `main.sh` consulta SDSS y VizieR. Si una consulta falla, informa del problema y continúa con los datos de muestra disponibles. Después genera los diagramas de cada catálogo, pregunta si quieres abrir los diagramas estáticos y construye el catálogo y gráfico interactivos. El gráfico interactivo se guarda como `resultados/combined_catalogs_interactive.html` y se abre en el navegador predeterminado del mismo equipo. El archivo incluye Plotly, así que no necesita descargar esa biblioteca desde Internet.
 
